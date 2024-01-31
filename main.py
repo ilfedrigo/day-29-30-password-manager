@@ -2,31 +2,42 @@ from tkinter import *
 import random
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
-# letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-# numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-# symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
 
-# print("Welcome to the PyPassword Generator!")
-# nr_letters= int(input("How many letters would you like in your password?\n")) 
-# nr_symbols = int(input(f"How many symbols would you like?\n"))
-# nr_numbers = int(input(f"How many numbers would you like?\n"))
+def password_generator():
+    
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
 
-# password = []
-# for char in range (1, nr_letters + 1):
-#   password.append(random.choice(letters))
+    password = []
+    for char in range (1, 13):
+        password.append(random.choice(letters))
 
-# for char in range (1, nr_symbols + 1):
-#   password.append(random.choice(symbols))
+    for char in range (1, 7):
+        password.append(random.choice(symbols))
 
-# for char in range (1, nr_numbers + 1):
-#   password.append(random.choice(numbers))
+    for char in range (1, 7):
+        password.append(random.choice(numbers))
 
-# final_password = ""
-# random.shuffle(password)
-# final_password = "".join(password)
+    final_password = ""
+    random.shuffle(password)
+    final_password = "".join(password)
+    
+    password_input.insert(0, final_password) 
 
-# print(final_password)
 # ---------------------------- SAVE PASSWORD ------------------------------- #
+
+def save():
+    website = website_input.get()
+    username = user_input.get()
+    password = password_input.get()
+
+    with open ('password.txt', 'a') as file:
+        file.write(f"{website} | {username} | {password}\n")
+
+    website_input.delete(0, END)
+    user_input.delete(0, END)
+    password_input.delete(0, END)
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -53,10 +64,10 @@ user_input.grid(row=2, column=1, columnspan=2)
 password_input = Entry(width=21)
 password_input.grid(row=3, column=1)
 
-gen_password_button = Button(text="Generate Password")
+gen_password_button = Button(text="Generate Password", command=password_generator)
 gen_password_button.grid(row=3, column=2)
 
-add_button = Button(text="Add", width=36)
+add_button = Button(text="Add", width=36, command=save)
 add_button.grid(row=4, column=1, columnspan=2)
 
 window.mainloop()
