@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 import random
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -9,20 +10,12 @@ def password_generator():
     numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
 
-    password = []
-    for char in range (1, 13):
-        password.append(random.choice(letters))
+    password = [random.choice(letters) for _ in range(12)] + [random.choice(symbols) for _ in range(6)] + [random.choice(numbers) for _ in range(6)]
 
-    for char in range (1, 7):
-        password.append(random.choice(symbols))
-
-    for char in range (1, 7):
-        password.append(random.choice(numbers))
-
-    final_password = ""
     random.shuffle(password)
     final_password = "".join(password)
     
+    password_input.delete(0, END) 
     password_input.insert(0, final_password) 
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
@@ -32,12 +25,21 @@ def save():
     username = user_input.get()
     password = password_input.get()
 
-    with open ('password.txt', 'a') as file:
-        file.write(f"{website} | {username} | {password}\n")
 
-    website_input.delete(0, END)
-    user_input.delete(0, END)
-    password_input.delete(0, END)
+    if website == "" or username == "" or password == "":
+        messagebox.showinfo(title="Oops", message="Please make sure you don't have any fields empty")
+
+    else:
+        is_ok = messagebox.askokcancel(title=website, message=f"New password details: \nEmail: {username} "
+                                   f"\n Password: {password} \n Save?")
+
+        if is_ok:
+            with open ('password.txt', 'a') as file:
+                file.write(f"{website} | {username} | {password}\n")
+
+            website_input.delete(0, END)
+            user_input.delete(0, END)
+            password_input.delete(0, END)
 
 # ---------------------------- UI SETUP ------------------------------- #
 
