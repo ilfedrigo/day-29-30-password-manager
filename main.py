@@ -33,12 +33,43 @@ def save():
     if website == "" or email == "" or password == "":
         messagebox.showinfo(title="Oops", message="Please make sure you don't have any fields empty")
     else:
-        with open ('password.json', 'w') as file:
-            json.dump(new_file, file, indent=4)
+        try:
+            with open ('password.json', 'r') as file:
+                data = json.load(file)
 
+        except FileNotFoundError:
+            with open("password.json", "w") as file:
+                json.dump(new_file, file, indent=4)
+
+        else:
+            data.update(new_file)
+
+            with open("password.json", "w") as file:
+                json.dump(data, file, indent=4)
+        
+        finally:
             website_input.delete(0, END)
             user_input.delete(0, END)
             password_input.delete(0, END)
+
+
+
+# ------------------------ SEARCH PASSWORD --------------------------- #
+
+def search():
+    website = website_input.get()
+    try:
+        with open ("password.json") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+            messagebox.showinfo(title="Error", message="No data file found.")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+        elif website not in data:
+            messagebox.showinfo(title="Website not found.", message="Website not found in the database")
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -58,12 +89,15 @@ user_text.grid(row=2, column=0)
 password_text = Label(text="Password:")
 password_text.grid(row=3, column=0)
 
-website_input = Entry(width=38)
-website_input.grid(row=1, column=1, columnspan=2)
+website_input = Entry(width=21)
+website_input.grid(row=1, column=1)
 user_input = Entry(width=38)
 user_input.grid(row=2, column=1, columnspan=2)
 password_input = Entry(width=21)
 password_input.grid(row=3, column=1)
+
+search_button = Button(text="Search", width=13, command=search)
+search_button.grid(row=1, column=2)
 
 gen_password_button = Button(text="Generate Password", command=password_generator)
 gen_password_button.grid(row=3, column=2)
